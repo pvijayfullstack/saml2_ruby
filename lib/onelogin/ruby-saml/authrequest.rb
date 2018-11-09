@@ -59,7 +59,7 @@ module OneLogin
 
         request_doc = create_authentication_xml_doc(settings)
         
-        Logging.debug "sign_document ::::::::: -- #{request_doc}"
+        puts "sign_document ::::::::: -- #{request_doc}"
 
         request_doc.context[:attribute_quote] = :quote if settings.double_quote_xml_attribute_values
 
@@ -67,9 +67,9 @@ module OneLogin
         request = ""
         request_doc.write(request)
 
-        Logging.debug "::::::::::: XML Request :::::::::"
-        Logging.debug "#{request}"
-        Logging.debug "::::::::::: XML Request :::::::::"
+        puts "::::::::::: XML Request :::::::::"
+        puts "#{request}"
+        puts "::::::::::: XML Request :::::::::"
        
 
         request = deflate(request) if settings.compress_request
@@ -86,12 +86,12 @@ module OneLogin
           )
           sign_algorithm = XMLSecurity::BaseDocument.new.algorithm(settings.security[:signature_method])
 
-          Logging.debug "sign_algorithm ::::::::: #{sign_algorithm}"
-          Logging.debug sign_algorithm
+          puts "sign_algorithm ::::::::: #{sign_algorithm}"
+          puts sign_algorithm
 
           signature = settings.get_sp_key.sign(sign_algorithm.new, url_string)
 
-          Logging.debug "signature ::::::::: #{signature}"
+          puts "signature ::::::::: #{signature}"
          
 
           params['Signature'] = encode(signature)
@@ -129,14 +129,14 @@ module OneLogin
         root.attributes["AttributeConsumingServiceIndex"] = settings.attributes_index unless settings.attributes_index.nil?
         root.attributes['ForceAuthn'] = settings.force_authn unless settings.force_authn.nil?
 
-        Logging.debug "Session ID ::::::: -- #{root.attributes['ID']}"
-        Logging.debug "IssueInstant ::::::: -- #{root.attributes['IssueInstant']}"
-        Logging.debug "Version ::::::: -- #{root.attributes['Version']}"
-        Logging.debug "Destination ::::::: -- #{root.attributes['Destination']}"
-        Logging.debug "IsPassive ::::::: -- #{root.attributes['IsPassive']}"
-        Logging.debug "ProtocolBinding ::::::: -- #{root.attributes['ProtocolBinding']}"
-        Logging.debug "AttributeConsumingServiceIndex ::::::: -- #{root.attributes['AttributeConsumingServiceIndex']}"
-        Logging.debug "ForceAuthn ::::::: -- #{root.attributes['ForceAuthn']}"
+        puts "Session ID ::::::: -- #{root.attributes['ID']}"
+        puts "IssueInstant ::::::: -- #{root.attributes['IssueInstant']}"
+        puts "Version ::::::: -- #{root.attributes['Version']}"
+        puts "Destination ::::::: -- #{root.attributes['Destination']}"
+        puts "IsPassive ::::::: -- #{root.attributes['IsPassive']}"
+        puts "ProtocolBinding ::::::: -- #{root.attributes['ProtocolBinding']}"
+        puts "AttributeConsumingServiceIndex ::::::: -- #{root.attributes['AttributeConsumingServiceIndex']}"
+        puts "ForceAuthn ::::::: -- #{root.attributes['ForceAuthn']}"
         
 
 
@@ -190,16 +190,16 @@ module OneLogin
 
       def sign_document(document, settings)
         # embed signature
-        Logging.debug "::::::::: embed signature settings --- #{settings.security}"
+        puts "::::::::: embed signature settings --- #{settings.security}"
 
         if settings.security[:authn_requests_signed] && settings.private_key && settings.certificate && settings.security[:embed_sign]
           private_key = settings.get_sp_key
           cert = settings.get_sp_cert
 
-          Logging.debug "::::::::: private_key --- #{private_key}"  
-          Logging.debug "::::::::: cert --- #{cert}"
-          Logging.debug "::::::::: signature_method --- #{settings.security[:signature_method]}"
-          Logging.debug "::::::::: digest_method --- #{settings.security[:digest_method]}" 
+          puts "::::::::: private_key --- #{private_key}"  
+          puts "::::::::: cert --- #{cert}"
+          puts "::::::::: signature_method --- #{settings.security[:signature_method]}"
+          puts "::::::::: digest_method --- #{settings.security[:digest_method]}" 
 
           document.sign_document(private_key, cert, settings.security[:signature_method], settings.security[:digest_method])
         end
